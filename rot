@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+usage = <<"EOS"
+USAGE: rot <str> <num> [option]
+  <str>を読み込んで<num>だけずらした文字列を表示する
+
+ -n <LINE>: <LINE>行だけ表示する
+EOS
+
+=begin
+discription: 
+  a-z → a-z の範囲で変換する。記号や大文字→小文字の変換はしない
+  数字も変換せず入力のままとする
+=end
+
+def lotate(str, num)
+  ret = ""
+  str.each_char do |ch|
+    ret << loteta_char(ch, num)
+  end
+  ret
+end
+
+def loteta_char(char, num)
+  unless char =~ /^[a-zA-Z0-9]$/
+    return char
+  end
+  num.times do
+		char = next_char(char)
+  end
+  char
+end
+
+def next_char(ch)
+	if ch == "Z"
+		ch = "A"
+	elsif ch == "z"
+		ch = "a"
+	elsif ch == "9"
+		ch = "0"
+	else
+		ch.succ!
+	end
+end
+## main
+
+tmp = ARGV.shift
+tmp_num = ARGV.shift
+
+if tmp && ! tmp_num
+	tmp_num = tmp.dup
+	tmp =  STDIN.read.dup.chomp
+end
+
+unless tmp && tmp_num 
+  print usage
+  exit 255
+end
+
+str = String.new(tmp)
+num = tmp_num.to_i
+
+print lotate(str,num)
+puts
